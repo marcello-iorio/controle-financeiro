@@ -48,6 +48,28 @@ def listar_movimentacoes():
 
     return jsonify(movimentacoes)
 
+@app.route("/saldo", methods=["GET"])
+def calcular_saldo():
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT 
+            SUM(CASE WHEN tipo = 'entrada' THEN valor ELSE 0 END) -
+            SUM(CASE WHEN tipo = 'saida' THEN valor ELSE 0 END)
+        AS saldo
+        FROM movimentacoes
+    """)
+
+    resultado = cursor.fetchone()
+    saldo = resultado[0] if resultado[0] is not None else 0
+
+    cursor.close()
+    conn.close()
+
+    return jsonify({"saldo": float(saldo)})
+
+
 if __name__ == "__main__":
     app.run(debug=True)
 
