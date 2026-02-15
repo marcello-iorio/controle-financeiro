@@ -1,7 +1,10 @@
 from flask import Flask, request, jsonify
 from db import get_connection
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
+
 
 @app.route("/")
 def home():
