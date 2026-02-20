@@ -61,3 +61,11 @@ ul li {
     font-size: 20px;
     font-weight: bold;
 }
+
+.entrada {
+    border-left: 6px solid #2ecc71;
+}
+
+.saida {
+    border-left: 6px solid #e74c3c;
+}

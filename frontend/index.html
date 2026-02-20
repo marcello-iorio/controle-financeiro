@@ -42,7 +42,12 @@
 
                 dados.forEach(m => {
                     const item = document.createElement("li");
-                    item.textContent = `${m.tipo} - ${m.valor} - ${m.descricao}`;
+                    item.textContent = `${m.descricao} - R$ ${m.valor}`;
+                    if (m.tipo === "entrada") {
+                        item.classList.add("entrada");
+                    } else {
+                        item.classList.add("saida");
+                    }
                     lista.appendChild(item);
                 });
             }
@@ -51,7 +56,14 @@
                 const response = await fetch(API + "/saldo");
                 const dados = await response.json();
 
-                document.getElementById("saldo").textContent = dados.saldo;
+                const saldoElemento = document.getElementById("saldo");
+                saldoElemento.textContent = "R$ " + dados.saldo;
+
+                if (dados.saldo >= 0) {
+                    saldoElemento.style.color = "#2ecc71";
+                } else {
+                    saldoElemento.style.color = "#e74c3c";
+                }
             }
 
             document.getElementById("form").addEventListener("submit", async (e) => {
