@@ -12,9 +12,8 @@ Sistema web simples para controle financeiro pessoal, permitindo registrar entra
 
 Este projeto foi desenvolvido como parte de um trabalho acadêmico utilizando backend em Python e Flask, banco de dados MySQL e uma interface web simples em HTML, CSS e JavaScript.
 
-## 📷 Preview do sistema
+## 🎥 Demonstração
 
-![Preview do sistema](docs/screenshot.png)
 ![Demonstração do sistema](docs/demo.gif)
 
 ---
