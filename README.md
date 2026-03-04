@@ -1,11 +1,20 @@
 # Sistema de Controle Financeiro
 
+![Python](https://img.shields.io/badge/Python-3.x-blue)
+![Flask](https://img.shields.io/badge/Flask-Backend-black)
+![MySQL](https://img.shields.io/badge/MySQL-Database-orange)
+![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow)
+
 Projeto desenvolvido por sprints utilizando Flask e MySQL.
 # 💰 Sistema de Controle Financeiro
 
 Sistema web simples para controle financeiro pessoal, permitindo registrar entradas e saídas, visualizar movimentações e acompanhar o saldo atual.
 
 Este projeto foi desenvolvido como parte de um trabalho acadêmico utilizando backend em Python e Flask, banco de dados MySQL e uma interface web simples em HTML, CSS e JavaScript.
+
+## 📷 Preview do sistema
+
+![Preview do sistema](docs/screenshot.png)
 
 ---
 
