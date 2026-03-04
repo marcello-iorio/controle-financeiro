@@ -15,6 +15,7 @@ Este projeto foi desenvolvido como parte de um trabalho acadêmico utilizando ba
 ## 📷 Preview do sistema
 
 ![Preview do sistema](docs/screenshot.png)
+![Demonstração do sistema](docs/demo.gif)
 
 ---
 
