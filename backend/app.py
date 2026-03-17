@@ -43,7 +43,7 @@ def listar_movimentacoes():
     conn = get_connection()
     cursor = conn.cursor(dictionary=True)
 
-    cursor.execute("SELECT * FROM movimentacoes ORDER BY data DESC")
+    cursor.execute("SELECT m.*, c.nome as categoria FROM movimentacoes m LEFT JOIN categorias c ON m.categoria_id = c.id")
     movimentacoes = cursor.fetchall()
 
     cursor.close()

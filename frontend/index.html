@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <meta charset="UTF-8">
     <title>Controle Financeiro</title>
 </head>
+
 <body>
     <div class="container">
         <h1>Controle Financeiro</h1>
@@ -17,6 +19,7 @@
                 <option value="entrada">Entrada</option>
                 <option value="saida">Saída</option>
             </select>
+            <select id="categoria"></select>
 
             <input type="number" id="valor" placeholder="Valor" required>
             <input type="date" id="data" required>
@@ -43,7 +46,7 @@
 
                 dados.forEach(m => {
                     const item = document.createElement("li");
-                    item.textContent = `${m.descricao} - R$ ${m.valor}`;
+                    item.textContent = `${m.descricao} - ${m.categoria} - R$ ${m.valor}`
                     if (m.tipo === "entrada") {
                         item.classList.add("entrada");
                     } else {
@@ -67,11 +70,27 @@
                 }
             }
 
+            async function carregarCategorias() {
+                const response = await fetch(API + "/categorias");
+                const categorias = await response.json();
+
+                const select = document.getElementById("categoria");
+                select.innerHTML = "";
+
+                categorias.forEach(c => {
+                    const option = document.createElement("option");
+                    option.value = c.id;
+                    option.textContent = c.nome;
+                    select.appendChild(option);
+                });
+            }
+
             document.getElementById("form").addEventListener("submit", async (e) => {
                 e.preventDefault();
 
                 const movimentacao = {
                     tipo: document.getElementById("tipo").value,
+                    categoria_id: document.getElementById("categoria").value,
                     valor: parseFloat(document.getElementById("valor").value),
                     data: document.getElementById("data").value,
                     descricao: document.getElementById("descricao").value
@@ -87,9 +106,11 @@
                 carregarSaldo();
             });
 
+            carregarCategorias();
             carregarMovimentacoes();
             carregarSaldo();
         </script>
     </div>
 </body>
+
 </html>
