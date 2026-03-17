@@ -36,6 +36,13 @@
         <h2>Saldo Atual</h2>
         <p id="saldo">Carregando...</p>
 
+        <label>Filtrar:</label>
+        <select id="filtroTipo">
+            <option value="todos">Todos</option>
+            <option value="entrada">Entradas</option>
+            <option value="saida">Saídas</option>
+        </select>
+
         <h2>Movimentações</h2>
         <ul id="lista"></ul>
 
@@ -43,29 +50,37 @@
             const API = "http://127.0.0.1:5000";
 
             async function carregarMovimentacoes() {
-                const response = await fetch(API + "/movimentacoes");
-                const dados = await response.json();
+    const response = await fetch(API + "/movimentacoes");
+    const dados = await response.json();
 
-                const lista = document.getElementById("lista");
-                lista.innerHTML = "";
+    const filtro = document.getElementById("filtroTipo").value;
 
-                dados.forEach(m => {
-                    const item = document.createElement("li");
-                    const valor = Number(m.valor).toFixed(2);
-                    const corValor = m.tipo === "entrada" ? "#2ecc71" : "#e74c3c";
-                    const dataFormatada = new Date(m.data).toLocaleDateString("pt-BR");
+    const lista = document.getElementById("lista");
+    lista.innerHTML = "";
 
-                    const tipoTexto = m.tipo === "entrada" ? "💰 Entrada" : "💸 Saída";
+    const filtrados = dados.filter(m => {
+        if (filtro === "todos") return true;
+        return m.tipo === filtro;
+    });
 
-                    item.innerHTML = `
-                        <strong>${tipoTexto} - ${m.categoria || "Sem categoria"}</strong><br>
-                        <small>${m.descricao || ""}</small><br>
-                        <span style="color: ${corValor}">R$ ${valor}</span><br>
-                        <small>${dataFormatada}</small>
-                    `;
-                    lista.appendChild(item);
-                });
-            }
+    filtrados.forEach(m => {
+        const item = document.createElement("li");
+
+        const valor = Number(m.valor).toFixed(2);
+        const dataFormatada = new Date(m.data).toLocaleDateString("pt-BR");
+        const tipoTexto = m.tipo === "entrada" ? "💰 Entrada" : "💸 Saída";
+        const corValor = m.tipo === "entrada" ? "#2ecc71" : "#e74c3c";
+
+        item.innerHTML = `
+            <strong>${tipoTexto} - ${m.categoria || "Sem categoria"}</strong><br>
+            <small>${m.descricao || ""}</small><br>
+            <span style="color: ${corValor}">R$ ${valor}</span><br>
+            <small>${dataFormatada}</small>
+        `;
+
+        lista.appendChild(item);
+    });
+}
 
             async function carregarSaldo() {
                 const response = await fetch(API + "/saldo");
@@ -136,6 +151,10 @@
 
                 carregarMovimentacoes();
                 carregarSaldo();
+            });
+
+            document.getElementById("filtroTipo").addEventListener("change", () => {
+                carregarMovimentacoes();
             });
 
             carregarCategorias();
