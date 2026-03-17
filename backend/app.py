@@ -72,6 +72,36 @@ def calcular_saldo():
 
     return jsonify({"saldo": float(saldo)})
 
+@app.route("/categorias", methods=["POST"])
+def criar_categoria():
+    data = request.json
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "INSERT INTO categorias (nome) VALUES (%s)",
+        (data["nome"],)
+    )
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return jsonify({"status": "ok"}), 201
+
+@app.route("/categorias", methods=["GET"])
+def listar_categorias():
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("SELECT * FROM categorias")
+    categorias = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify(categorias)
 
 if __name__ == "__main__":
     app.run(debug=True)
