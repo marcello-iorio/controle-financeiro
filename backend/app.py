@@ -103,6 +103,27 @@ def listar_categorias():
 
     return jsonify(categorias)
 
+@app.route("/movimentacoes/<int:id>", methods=["PUT"])
+def atualizar_movimentacao(id):
+    data = request.json
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    sql = """
+        UPDATE movimentacoes
+        SET categoria_id = %s
+        WHERE id = %s
+    """
+
+    cursor.execute(sql, (data["categoria_id"], id))
+    conn.commit()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify({"status": "atualizado"})
+
 if __name__ == "__main__":
     app.run(debug=True)
 
