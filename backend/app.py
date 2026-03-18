@@ -112,11 +112,23 @@ def atualizar_movimentacao(id):
 
     sql = """
         UPDATE movimentacoes
-        SET categoria_id = %s
+        SET tipo = %s,
+            valor = %s,
+            data = %s,
+            descricao = %s,
+            categoria_id = %s
         WHERE id = %s
     """
 
-    cursor.execute(sql, (data["categoria_id"], id))
+    cursor.execute(sql, (
+        data["tipo"],
+        data["valor"],
+        data["data"],
+        data["descricao"],
+        data["categoria_id"],
+        id
+    ))
+
     conn.commit()
 
     cursor.close()

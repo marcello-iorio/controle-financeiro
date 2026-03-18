@@ -12,75 +12,125 @@
     <div class="container">
         <h1>Controle Financeiro</h1>
 
-        <h2>Nova Categoria</h2>
+        <div class="top">
+            <div class="card">
+                <h2>Nova Movimentação</h2>
+                <form id="form">
+                    <div class="form-grid">
 
-        <input type="text" id="novaCategoria" placeholder="Nome da categoria">
-        <button onclick="criarCategoria()">Adicionar</button>
+                        <select id="tipo">
+                            <option value="entrada">Entrada</option>
+                            <option value="saida">Saída</option>
+                        </select>
 
-        <h2>Nova Movimentação</h2>
+                        <select id="categoria"></select>
 
-        <form id="form">
-            <select id="tipo">
-                <option value="entrada">Entrada</option>
-                <option value="saida">Saída</option>
-            </select>
-            <select id="categoria"></select>
+                        <input type="number" id="valor" placeholder="Valor">
 
-            <input type="number" id="valor" placeholder="Valor" required>
-            <input type="date" id="data" required>
-            <input type="text" id="descricao" placeholder="Descrição">
+                        <input type="date" id="data">
 
-            <button type="submit">Cadastrar</button>
-        </form>
+                        <input type="text" id="descricao" placeholder="Descrição">
 
-        <h2>Saldo Atual</h2>
-        <p id="saldo">Carregando...</p>
+                        <button type="submit">Cadastrar</button>
 
-        <label>Filtrar:</label>
-        <select id="filtroTipo">
-            <option value="todos">Todos</option>
-            <option value="entrada">Entradas</option>
-            <option value="saida">Saídas</option>
-        </select>
+                    </div>
 
-        <h2>Movimentações</h2>
-        <ul id="lista"></ul>
+                    <small class="link-categoria" onclick="mostrarCampoCategoria()">
+                        + Nova categoria
+                    </small>
+                    <div class="nova-categoria" style="display: hidden;">
+                        <input type="text" placeholder="Nome da categoria">
+                        <button>Adicionar</button>
+                    </div>
+                </form>
+            </div>
+            <div class="card saldo-box">
+                <h2>Saldo Atual</h2>
+                <p id="saldo">Carregando...</p>
+                <label>Filtrar:</label>
+                <select id="filtroTipo">
+                    <option value="todos">Todos</option>
+                    <option value="entrada">Entradas</option>
+                    <option value="saida">Saídas</option>
+                </select>
+
+            </div>
+        </div>
+
+        <div class="bottom card">
+            <h2>Movimentações</h2>
+            <ul id="lista"></ul>
+        </div>
 
         <script>
+
+            let editandoId = null;
+
+
             const API = "http://127.0.0.1:5000";
 
             async function carregarMovimentacoes() {
-    const response = await fetch(API + "/movimentacoes");
-    const dados = await response.json();
+                const response = await fetch(API + "/movimentacoes");
+                const dados = await response.json();
 
-    const filtro = document.getElementById("filtroTipo").value;
+                const filtro = document.getElementById("filtroTipo").value;
 
-    const lista = document.getElementById("lista");
-    lista.innerHTML = "";
+                const lista = document.getElementById("lista");
+                lista.innerHTML = "";
 
-    const filtrados = dados.filter(m => {
-        if (filtro === "todos") return true;
-        return m.tipo === filtro;
-    });
+                const filtrados = dados.filter(m => {
+                    if (filtro === "todos") return true;
+                    return m.tipo === filtro;
+                });
 
-    filtrados.forEach(m => {
-        const item = document.createElement("li");
+                filtrados.forEach(m => {
+                    const item = document.createElement("li");
 
-        const valor = Number(m.valor).toFixed(2);
-        const dataFormatada = new Date(m.data).toLocaleDateString("pt-BR");
-        const tipoTexto = m.tipo === "entrada" ? "💰 Entrada" : "💸 Saída";
-        const corValor = m.tipo === "entrada" ? "#2ecc71" : "#e74c3c";
+                    const valor = Number(m.valor).toFixed(2);
+                    const dataFormatada = new Date(m.data).toLocaleDateString("pt-BR");
+                    const tipoTexto = m.tipo === "entrada" ? "💰 Entrada" : "💸 Saída";
+                    const corValor = m.tipo === "entrada" ? "#2ecc71" : "#e74c3c";
 
-        item.innerHTML = `
-            <strong>${tipoTexto} - ${m.categoria || "Sem categoria"}</strong><br>
-            <small>${m.descricao || ""}</small><br>
-            <span style="color: ${corValor}">R$ ${valor}</span><br>
-            <small>${dataFormatada}</small>
-        `;
+                    item.innerHTML = `
+                        <strong>${tipoTexto} - ${m.categoria || "Sem categoria"}</strong><br>
+                        <small>${m.descricao || ""}</small><br>
+                        <span style="color: ${corValor}">R$ ${valor}</span><br>
+                        <small>${dataFormatada}</small>
+                    `;
 
-        lista.appendChild(item);
-    });
-}
+                    const botaoEditar = document.createElement("button");
+                    botaoEditar.textContent = "Editar";
+
+                    botaoEditar.onclick = () => carregarParaEdicao(m);
+
+                    item.appendChild(botaoEditar);
+
+                    lista.appendChild(item);
+                });
+            }
+
+            function mostrarCampoCategoria() {
+                const box = document.getElementById("novaCategoriaBox");
+                box.style.display = box.style.display === "none" ? "block" : "none";
+            }
+
+            function carregarParaEdicao(m) {
+
+                const dataFormatada = new Date(m.data).toISOString().split("T")[0];
+
+                document.getElementById("tipo").value = m.tipo;
+                document.getElementById("valor").value = m.valor;
+                document.getElementById("data").value = dataFormatada;
+                document.getElementById("descricao").value = m.descricao || "";
+                document.getElementById("categoria").value = m.categoria_id || "";
+
+                editandoId = m.id;
+                if (editandoId) {
+                    document.querySelector("button[type='submit']").textContent = "Atualizar";
+                } else {
+                    document.querySelector("button[type='submit']").textContent = "Cadastrar";
+                }
+            }
 
             async function carregarSaldo() {
                 const response = await fetch(API + "/saldo");
@@ -132,22 +182,50 @@
                 alert("Categoria criada!");
             }
 
+            async function editarCategoria(id) {
+                const categoriaId = prompt("Digite o ID da nova categoria:");
+
+                if (!categoriaId) return;
+
+                await fetch(API + "/movimentacoes/" + id, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ categoria_id: categoriaId })
+                });
+
+                carregarMovimentacoes();
+            }
+
             document.getElementById("form").addEventListener("submit", async (e) => {
                 e.preventDefault();
 
                 const movimentacao = {
                     tipo: document.getElementById("tipo").value,
-                    categoria_id: document.getElementById("categoria").value,
                     valor: parseFloat(document.getElementById("valor").value),
                     data: document.getElementById("data").value,
-                    descricao: document.getElementById("descricao").value
+                    descricao: document.getElementById("descricao").value,
+                    categoria_id: document.getElementById("categoria").value || null
                 };
 
-                await fetch(API + "/movimentacoes", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(movimentacao)
-                });
+                if (editandoId) {
+                    // UPDATE
+                    await fetch(API + "/movimentacoes/" + editandoId, {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(movimentacao)
+                    });
+
+                    editandoId = null;
+                } else {
+                    // CREATE
+                    await fetch(API + "/movimentacoes", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(movimentacao)
+                    });
+                }
+
+                e.target.reset();
 
                 carregarMovimentacoes();
                 carregarSaldo();
