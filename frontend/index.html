@@ -23,7 +23,9 @@
                             <option value="saida">Saída</option>
                         </select>
 
-                        <select id="categoria"></select>
+                        <select id="categoria">
+                            <option value="" disabled selected>Selecione uma categoria</option>
+                        </select>
 
                         <input type="number" id="valor" placeholder="Valor">
 
@@ -35,17 +37,17 @@
 
                     </div>
 
-                    <small class="link-categoria" onclick="mostrarCampoCategoria()">
+                    <button type="button" class="btn-categoria" onclick="toggleCategoria()">
                         + Nova categoria
-                    </small>
-                    <div class="nova-categoria" style="display: hidden;">
-                        <input type="text" placeholder="Nome da categoria">
-                        <button>Adicionar</button>
+                    </button>
+                    <div id="novaCategoriaBox" style="display: none;" class="nova-categoria">
+                        <input type="text" id="novaCategoria" placeholder="Nome da categoria">
+                        <button onclick="criarCategoria()">Adicionar</button>
                     </div>
                 </form>
             </div>
             <div class="card saldo-box">
-                <h2>Saldo Atual</h2>
+                <h2 id="saldoTitulo">Saldo Atual</h2>
                 <p id="saldo">Carregando...</p>
                 <label>Filtrar:</label>
                 <select id="filtroTipo">
@@ -72,8 +74,27 @@
             async function carregarMovimentacoes() {
                 const response = await fetch(API + "/movimentacoes");
                 const dados = await response.json();
-
                 const filtro = document.getElementById("filtroTipo").value;
+                const saldoFiltrado = calcularSaldoFiltrado(dados, filtro);
+                document.getElementById("saldo").textContent = `R$ ${saldoFiltrado.toFixed(2)}`;
+                const titulo = document.querySelector("#saldoTitulo");
+                const saldoEl = document.getElementById("saldo");
+                
+                if (filtro === "entrada") {
+                    saldoEl.style.color = "#2ecc71"; // verde
+                } else if (filtro === "saida") {
+                    saldoEl.style.color = "#e74c3c"; // vermelho
+                } else {
+                    saldoEl.style.color = saldoFiltrado >= 0 ? "#2ecc71" : "#e74c3c";
+                }
+                
+
+                if (filtro === "entrada"){
+                    titulo.textContent = "Total de Entradas";
+                } else if (filtro === "saida"){
+                     titulo.textContent = "Total de Saídas";
+                }
+                else titulo.textContent = "Saldo Atual";
 
                 const lista = document.getElementById("lista");
                 lista.innerHTML = "";
@@ -109,9 +130,39 @@
                 });
             }
 
-            function mostrarCampoCategoria() {
+            function calcularSaldoFiltrado(movimentacoes, filtro) {
+    let total = 0;
+
+    movimentacoes.forEach(m => {
+        if (filtro === "entrada") {
+            if (m.tipo === "entrada") {
+                total += Number(m.valor);
+            }
+        } else if (filtro === "saida") {
+            if (m.tipo === "saida") {
+                total += Number(m.valor); // 👈 soma normal (positivo)
+            }
+        } else {
+            // TODOS (saldo real)
+            if (m.tipo === "entrada") {
+                total += Number(m.valor);
+            } else {
+                total -= Number(m.valor);
+            }
+        }
+    });
+
+    return total;
+}
+
+            function toggleCategoria() {
                 const box = document.getElementById("novaCategoriaBox");
-                box.style.display = box.style.display === "none" ? "block" : "none";
+
+                if (box.style.display === "none") {
+                    box.style.display = "flex";
+                } else {
+                    box.style.display = "none";
+                }
             }
 
             function carregarParaEdicao(m) {
@@ -151,7 +202,9 @@
                 const categorias = await response.json();
 
                 const select = document.getElementById("categoria");
-                select.innerHTML = "";
+                select.innerHTML = `
+    <option value="" disabled selected>Selecione uma categoria</option>
+`;
 
                 categorias.forEach(c => {
                     const option = document.createElement("option");
