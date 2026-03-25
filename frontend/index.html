@@ -23,9 +23,27 @@
                             <option value="saida">Saída</option>
                         </select>
 
-                        <select id="categoria">
-                            <option value="" disabled selected>Selecione uma categoria</option>
-                        </select>
+                        
+
+                        <div class="categoria-wrapper">
+    
+     <select id="categoria">
+                                <option value="" disabled selected>Selecione uma categoria</option>
+                            </select>
+
+    <button type="button" class="btn-add-categoria" onclick="toggleCategoria()">
+        <span>+</span>
+    </button>
+
+    <input 
+        type="text" 
+        id="novaCategoria" 
+        placeholder="Nova categoria"
+        class="input-categoria"
+        style="display: none;"
+    >
+
+</div>
 
                         <input type="number" id="valor" placeholder="Valor">
 
@@ -37,13 +55,13 @@
 
                     </div>
 
-                    <button type="button" class="btn-categoria" onclick="toggleCategoria()">
-                        + Nova categoria
-                    </button>
+                    
                     <div id="novaCategoriaBox" style="display: none;" class="nova-categoria">
                         <input type="text" id="novaCategoria" placeholder="Nome da categoria">
                         <button onclick="criarCategoria()">Adicionar</button>
+
                     </div>
+                    <div id="toast" class="toast"></div>
                 </form>
             </div>
             <div class="card saldo-box">
@@ -60,6 +78,7 @@
         </div>
 
         <div class="bottom card">
+
             <h2>Movimentações</h2>
             <ul id="lista"></ul>
         </div>
@@ -79,7 +98,7 @@
                 document.getElementById("saldo").textContent = `R$ ${saldoFiltrado.toFixed(2)}`;
                 const titulo = document.querySelector("#saldoTitulo");
                 const saldoEl = document.getElementById("saldo");
-                
+
                 if (filtro === "entrada") {
                     saldoEl.style.color = "#2ecc71"; // verde
                 } else if (filtro === "saida") {
@@ -87,12 +106,12 @@
                 } else {
                     saldoEl.style.color = saldoFiltrado >= 0 ? "#2ecc71" : "#e74c3c";
                 }
-                
 
-                if (filtro === "entrada"){
+
+                if (filtro === "entrada") {
                     titulo.textContent = "Total de Entradas";
-                } else if (filtro === "saida"){
-                     titulo.textContent = "Total de Saídas";
+                } else if (filtro === "saida") {
+                    titulo.textContent = "Total de Saídas";
                 }
                 else titulo.textContent = "Saldo Atual";
 
@@ -131,39 +150,50 @@
             }
 
             function calcularSaldoFiltrado(movimentacoes, filtro) {
-    let total = 0;
+                let total = 0;
 
-    movimentacoes.forEach(m => {
-        if (filtro === "entrada") {
-            if (m.tipo === "entrada") {
-                total += Number(m.valor);
-            }
-        } else if (filtro === "saida") {
-            if (m.tipo === "saida") {
-                total += Number(m.valor); // 👈 soma normal (positivo)
-            }
-        } else {
-            // TODOS (saldo real)
-            if (m.tipo === "entrada") {
-                total += Number(m.valor);
-            } else {
-                total -= Number(m.valor);
-            }
-        }
-    });
+                movimentacoes.forEach(m => {
+                    if (filtro === "entrada") {
+                        if (m.tipo === "entrada") {
+                            total += Number(m.valor);
+                        }
+                    } else if (filtro === "saida") {
+                        if (m.tipo === "saida") {
+                            total += Number(m.valor); // 👈 soma normal (positivo)
+                        }
+                    } else {
+                        // TODOS (saldo real)
+                        if (m.tipo === "entrada") {
+                            total += Number(m.valor);
+                        } else {
+                            total -= Number(m.valor);
+                        }
+                    }
+                });
 
-    return total;
-}
+                return total;
+            }
 
             function toggleCategoria() {
-                const box = document.getElementById("novaCategoriaBox");
+    const select = document.getElementById("categoria");
+    const input = document.getElementById("novaCategoria");
+    const btn = document.querySelector(".btn-add-categoria");
 
-                if (box.style.display === "none") {
-                    box.style.display = "flex";
-                } else {
-                    box.style.display = "none";
-                }
-            }
+    const criando = input.style.display === "block";
+
+    if (criando) {
+        // voltar para select
+        input.style.display = "none";
+        select.style.display = "block";
+        btn.textContent = "+";
+    } else {
+        // trocar para input
+        input.style.display = "block";
+        select.style.display = "none";
+        btn.textContent = "×";
+        input.focus();
+    }
+}
 
             function carregarParaEdicao(m) {
 
@@ -217,10 +247,7 @@
             async function criarCategoria() {
                 const nome = document.getElementById("novaCategoria").value;
 
-                if (!nome) {
-                    alert("Digite um nome para a categoria");
-                    return;
-                }
+                if (!nome) return;
 
                 await fetch(API + "/categorias", {
                     method: "POST",
@@ -229,10 +256,12 @@
                 });
 
                 document.getElementById("novaCategoria").value = "";
+                document.getElementById("novaCategoriaBox").style.display = "none";
 
-                carregarCategorias(); // atualiza o select
+                carregarCategorias();
 
-                alert("Categoria criada!");
+
+                mostrarToast("Categoria criada com sucesso!");
             }
 
             async function editarCategoria(id) {
@@ -247,6 +276,17 @@
                 });
 
                 carregarMovimentacoes();
+            }
+
+            function mostrarToast(texto) {
+                const toast = document.getElementById("toast");
+
+                toast.textContent = texto;
+                toast.classList.add("show");
+
+                setTimeout(() => {
+                    toast.classList.remove("show");
+                }, 2500);
             }
 
             document.getElementById("form").addEventListener("submit", async (e) => {
@@ -284,6 +324,25 @@
                 carregarSaldo();
             });
 
+            document.getElementById("novaCategoria").addEventListener("keydown", async (e) => {
+    if (e.key === "Enter") {
+        const nome = e.target.value;
+        if (!nome) return;
+
+        await fetch(API + "/categorias", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ nome })
+        });
+
+        e.target.value = "";
+
+        toggleCategoria();
+        carregarCategorias();
+
+        mostrarToast("Categoria criada!");
+    }
+});
             document.getElementById("filtroTipo").addEventListener("change", () => {
                 carregarMovimentacoes();
             });
@@ -291,7 +350,11 @@
             carregarCategorias();
             carregarMovimentacoes();
             carregarSaldo();
+
+
         </script>
+
+
     </div>
 </body>
 
