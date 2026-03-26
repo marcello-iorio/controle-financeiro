@@ -314,3 +314,29 @@ ul li {
 
     border-radius: 8px;
 }
+
+.toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 12px 18px;
+    border-radius: 8px;
+    color: white;
+    font-size: 14px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: 0.3s;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.toast.sucesso {
+    background: #2ecc71;
+}
+
+.toast.erro {
+    background: #e74c3c;
+}

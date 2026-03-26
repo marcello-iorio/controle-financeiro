@@ -23,27 +23,22 @@
                             <option value="saida">Saída</option>
                         </select>
 
-                        
+
 
                         <div class="categoria-wrapper">
-    
-     <select id="categoria">
+
+                            <select id="categoria">
                                 <option value="" disabled selected>Selecione uma categoria</option>
                             </select>
 
-    <button type="button" class="btn-add-categoria" onclick="toggleCategoria()">
-        <span>+</span>
-    </button>
+                            <button type="button" class="btn-add-categoria" onclick="toggleCategoria()">
+                                <span>+</span>
+                            </button>
 
-    <input 
-        type="text" 
-        id="novaCategoria" 
-        placeholder="Nova categoria"
-        class="input-categoria"
-        style="display: none;"
-    >
+                            <input type="text" id="novaCategoria" placeholder="Nova categoria" class="input-categoria"
+                                style="display: none;">
 
-</div>
+                        </div>
 
                         <input type="number" id="valor" placeholder="Valor">
 
@@ -55,14 +50,15 @@
 
                     </div>
 
-                    
+
                     <div id="novaCategoriaBox" style="display: none;" class="nova-categoria">
                         <input type="text" id="novaCategoria" placeholder="Nome da categoria">
                         <button onclick="criarCategoria()">Adicionar</button>
 
                     </div>
-                    <div id="toast" class="toast"></div>
+
                 </form>
+                <div id="toast"></div>
             </div>
             <div class="card saldo-box">
                 <h2 id="saldoTitulo">Saldo Atual</h2>
@@ -175,25 +171,25 @@
             }
 
             function toggleCategoria() {
-    const select = document.getElementById("categoria");
-    const input = document.getElementById("novaCategoria");
-    const btn = document.querySelector(".btn-add-categoria");
+                const select = document.getElementById("categoria");
+                const input = document.getElementById("novaCategoria");
+                const btn = document.querySelector(".btn-add-categoria");
 
-    const criando = input.style.display === "block";
+                const criando = input.style.display === "block";
 
-    if (criando) {
-        // voltar para select
-        input.style.display = "none";
-        select.style.display = "block";
-        btn.textContent = "+";
-    } else {
-        // trocar para input
-        input.style.display = "block";
-        select.style.display = "none";
-        btn.textContent = "×";
-        input.focus();
-    }
-}
+                if (criando) {
+                    // voltar para select
+                    input.style.display = "none";
+                    select.style.display = "block";
+                    btn.textContent = "+";
+                } else {
+                    // trocar para input
+                    input.style.display = "block";
+                    select.style.display = "none";
+                    btn.textContent = "×";
+                    input.focus();
+                }
+            }
 
             function carregarParaEdicao(m) {
 
@@ -264,29 +260,25 @@
                 mostrarToast("Categoria criada com sucesso!");
             }
 
-            async function editarCategoria(id) {
-                const categoriaId = prompt("Digite o ID da nova categoria:");
 
-                if (!categoriaId) return;
 
-                await fetch(API + "/movimentacoes/" + id, {
-                    method: "PUT",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ categoria_id: categoriaId })
-                });
-
-                carregarMovimentacoes();
-            }
-
-            function mostrarToast(texto) {
+            function mostrarToast(texto, tipo = "sucesso") {
                 const toast = document.getElementById("toast");
 
-                toast.textContent = texto;
-                toast.classList.add("show");
+                // limpa e define base
+                toast.className = "toast show";
+
+                if (tipo === "sucesso") {
+                    toast.classList.add("sucesso");
+                    toast.textContent = "✅ " + texto;
+                } else {
+                    toast.classList.add("erro");
+                    toast.textContent = "❌ " + texto;
+                }
 
                 setTimeout(() => {
                     toast.classList.remove("show");
-                }, 2500);
+                }, 5000);
             }
 
             document.getElementById("form").addEventListener("submit", async (e) => {
@@ -301,48 +293,68 @@
                 };
 
                 if (editandoId) {
-                    // UPDATE
-                    await fetch(API + "/movimentacoes/" + editandoId, {
-                        method: "PUT",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(movimentacao)
-                    });
+                    try {
+                        const response = await fetch(API + "/movimentacoes/" + editandoId, {
+                            method: "PUT",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(movimentacao)
+                        });
 
-                    editandoId = null;
+                        if (!response.ok) {
+                            throw new Error("Erro ao atualizar");
+                        }
+
+                        mostrarToast("Movimentação atualizada!");
+                        editandoId = null;
+
+                    } catch (e) {
+                        mostrarToast("Erro ao atualizar movimentação", "erro");
+                    }
+
                 } else {
-                    // CREATE
-                    await fetch(API + "/movimentacoes", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(movimentacao)
-                    });
+                    try {
+                        const response = await fetch(API + "/movimentacoes", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(movimentacao)
+                        });
+
+                        if (!response.ok) {
+                            throw new Error("Erro ao cadastrar");
+                        }
+
+                        mostrarToast("Movimentação cadastrada!");
+
+                    } catch (e) {
+                        mostrarToast("Erro ao cadastrar movimentação", "erro");
+                    }
                 }
 
-                e.target.reset();
+                // e.target.reset();
 
                 carregarMovimentacoes();
                 carregarSaldo();
             });
 
             document.getElementById("novaCategoria").addEventListener("keydown", async (e) => {
-    if (e.key === "Enter") {
-        const nome = e.target.value;
-        if (!nome) return;
+                if (e.key === "Enter") {
+                    const nome = e.target.value;
+                    if (!nome) return;
 
-        await fetch(API + "/categorias", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ nome })
-        });
+                    await fetch(API + "/categorias", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ nome })
+                    });
 
-        e.target.value = "";
+                    e.target.value = "";
 
-        toggleCategoria();
-        carregarCategorias();
+                    toggleCategoria();
+                    carregarCategorias();
 
-        mostrarToast("Categoria criada!");
-    }
-});
+                    mostrarToast("Categoria criada!");
+                }
+            });
             document.getElementById("filtroTipo").addEventListener("change", () => {
                 carregarMovimentacoes();
             });
