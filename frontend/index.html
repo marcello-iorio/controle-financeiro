@@ -38,6 +38,11 @@
                             <input type="text" id="novaCategoria" placeholder="Nova categoria" class="input-categoria"
                                 style="display: none;">
 
+                            <button type="button" class="btn-confirmar" onclick="criarCategoria()"
+                                style="display: none;">
+                                ✔
+                            </button>
+
                         </div>
 
                         <input type="number" id="valor" placeholder="Valor">
@@ -173,20 +178,21 @@
             function toggleCategoria() {
                 const select = document.getElementById("categoria");
                 const input = document.getElementById("novaCategoria");
-                const btn = document.querySelector(".btn-add-categoria");
+                const btnAdd = document.querySelector(".btn-add-categoria");
+                const btnConfirm = document.querySelector(".btn-confirmar");
 
                 const criando = input.style.display === "block";
 
                 if (criando) {
-                    // voltar para select
                     input.style.display = "none";
+                    btnConfirm.style.display = "none";
                     select.style.display = "block";
-                    btn.textContent = "+";
+                    btnAdd.textContent = "+";
                 } else {
-                    // trocar para input
                     input.style.display = "block";
+                    btnConfirm.style.display = "flex";
                     select.style.display = "none";
-                    btn.textContent = "×";
+                    btnAdd.textContent = "×";
                     input.focus();
                 }
             }
@@ -241,24 +247,41 @@
             }
 
             async function criarCategoria() {
-                const nome = document.getElementById("novaCategoria").value;
+    const nome = document.getElementById("novaCategoria").value;
 
-                if (!nome) return;
+    if (!nome) return;
 
-                await fetch(API + "/categorias", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ nome })
-                });
+    try {
+        const response = await fetch(API + "/categorias", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ nome })
+        });
 
-                document.getElementById("novaCategoria").value = "";
-                document.getElementById("novaCategoriaBox").style.display = "none";
+        if (!response.ok) {
+            throw new Error();
+        }
 
-                carregarCategorias();
+        const nova = await response.json();
 
+       
+        await carregarCategorias();
 
-                mostrarToast("Categoria criada com sucesso!");
-            }
+        
+        document.getElementById("categoria").value = nova.id;
+
+        
+        document.getElementById("novaCategoria").value = "";
+
+        
+        toggleCategoria();
+
+        mostrarToast("Categoria criada!");
+
+    } catch {
+        mostrarToast("Erro ao criar categoria", "erro");
+    }
+}
 
 
 
@@ -340,7 +363,7 @@
                 if (e.key === "Enter") {
                     const nome = e.target.value;
                     if (!nome) return;
-
+                    e.preventDefault();
                     await fetch(API + "/categorias", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
