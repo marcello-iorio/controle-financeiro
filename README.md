@@ -46,15 +46,14 @@ Projeto desenvolvido por sprints utilizando Python (Flask), MySQL e uma interfac
 
 ## 📁 Estrutura do projeto
 
-
-controle-financeiro
-│
-├── backend
-├── frontend
-├── database
+```
+controle-financeiro/
+├── backend/
+├── frontend/
+├── database/
 ├── .env.example
 └── README.md
-
+```
 
 ---
 
@@ -67,34 +66,55 @@ python -m venv venv
 venv\Scripts\activate
 pip install -r backend/requirements.txt
 python backend/app.py
+```
 
 Frontend:
 
+```bash
 cd frontend
 python -m http.server 5500
+```
 
 Acesse no navegador:
 
+```
 http://127.0.0.1:5500
-📌 Configuração do banco de dados
+```
+
+---
+
+## 🗄️ Configuração do banco de dados
 
 Criar banco no MySQL:
 
+```sql
 CREATE DATABASE controle_financeiro;
+```
 
 Executar o script:
 
+```
 database/schema.sql
+```
 
-Criar arquivo .env na raiz:
+Criar arquivo `.env` na raiz:
 
+```
 DB_HOST=localhost
 DB_USER=root
 DB_PASSWORD=sua_senha
 DB_NAME=controle_financeiro
-📌 Status do projeto
-Sprint 1 ✔ (movimentações e saldo)
-Sprint 2 ✔ (categorias, filtros e melhorias de UX)
-👨‍💻 Autor
+```
+
+---
+
+## 📌 Status do projeto
+
+- Sprint 1 ✔ (movimentações e saldo)  
+- Sprint 2 ✔ (categorias, filtros e melhorias de UX)  
+
+---
+
+## 👤 Autor
 
 Marcello Iorio
