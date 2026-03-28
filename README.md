@@ -1,16 +1,15 @@
-# Sistema de Controle Financeiro
+# 💰 Sistema de Controle Financeiro
 
 ![Python](https://img.shields.io/badge/Python-3.x-blue)
 ![Flask](https://img.shields.io/badge/Flask-Backend-black)
 ![MySQL](https://img.shields.io/badge/MySQL-Database-orange)
 ![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow)
 
-Projeto desenvolvido por sprints utilizando Flask e MySQL.
-# 💰 Sistema de Controle Financeiro
+Sistema web para controle financeiro pessoal, permitindo registrar entradas e saídas, organizar movimentações por categorias e acompanhar o saldo em tempo real.
 
-Sistema web simples para controle financeiro pessoal, permitindo registrar entradas e saídas, visualizar movimentações e acompanhar o saldo atual.
+Projeto desenvolvido por sprints utilizando Python (Flask), MySQL e uma interface web com HTML, CSS e JavaScript.
 
-Este projeto foi desenvolvido como parte de um trabalho acadêmico utilizando backend em Python e Flask, banco de dados MySQL e uma interface web simples em HTML, CSS e JavaScript.
+---
 
 ## 🎥 Demonstração
 
@@ -18,7 +17,7 @@ Este projeto foi desenvolvido como parte de um trabalho acadêmico utilizando ba
 
 ---
 
-# 🚀 Tecnologias utilizadas
+## 🚀 Tecnologias utilizadas
 
 **Backend**
 - Python
@@ -30,148 +29,72 @@ Este projeto foi desenvolvido como parte de um trabalho acadêmico utilizando ba
 - CSS
 - JavaScript
 
-**Outros**
-- Git
-- GitHub
-
 ---
 
-# 📊 Funcionalidades
+## 📊 Funcionalidades
 
-✔ Cadastro de movimentações financeiras (entrada e saída)  
-✔ Listagem de movimentações registradas  
+✔ Cadastro de movimentações (entrada e saída)  
+✔ Listagem de movimentações  
 ✔ Cálculo automático do saldo  
-✔ Interface web simples para interação com o sistema  
-✔ Destaque visual para entradas e saídas  
+✔ Sistema de categorias  
+✔ Criação de categorias pelo frontend  
+✔ Edição de movimentações  
+✔ Filtro por tipo (entrada/saída)  
+✔ Feedback visual com notificações (toast)  
 
 ---
 
-# 📁 Estrutura do projeto
+## 📁 Estrutura do projeto
 
-```
+
 controle-financeiro
 │
 ├── backend
-│   ├── app.py
-│   ├── db.py
-│   └── requirements.txt
-│
 ├── frontend
-│   ├── index.html
-│   └── style.css
-│
 ├── database
-│   └── schema.sql
-│
 ├── .env.example
 └── README.md
-```
+
 
 ---
 
-# ⚙️ Como executar o projeto
-
-### 1️⃣ Clonar o repositório
+## ⚙️ Como executar o projeto
 
 ```bash
-git clone https://github.com/seu-usuario/controle-financeiro.git
-```
-
----
-
-### 2️⃣ Criar ambiente virtual
-
-```bash
+git clone https://github.com/marcello-iorio/controle-financeiro.git
+cd controle-financeiro
 python -m venv venv
-```
-
-Ativar ambiente virtual:
-
-**Windows**
-```bash
 venv\Scripts\activate
-```
-
-**Linux / Mac**
-```bash
-source venv/bin/activate
-```
-
----
-
-### 3️⃣ Instalar dependências
-
-```bash
 pip install -r backend/requirements.txt
-```
+python backend/app.py
 
----
+Frontend:
 
-### 4️⃣ Configurar banco de dados
+cd frontend
+python -m http.server 5500
 
-Criar o banco no MySQL:
+Acesse no navegador:
 
-```sql
+http://127.0.0.1:5500
+📌 Configuração do banco de dados
+
+Criar banco no MySQL:
+
 CREATE DATABASE controle_financeiro;
-```
 
 Executar o script:
 
-```
 database/schema.sql
-```
 
----
+Criar arquivo .env na raiz:
 
-### 5️⃣ Configurar variáveis de ambiente
-
-Criar arquivo `.env` na raiz do projeto:
-
-```
 DB_HOST=localhost
 DB_USER=root
 DB_PASSWORD=sua_senha
 DB_NAME=controle_financeiro
-```
+📌 Status do projeto
+Sprint 1 ✔ (movimentações e saldo)
+Sprint 2 ✔ (categorias, filtros e melhorias de UX)
+👨‍💻 Autor
 
----
-
-### 6️⃣ Executar backend
-
-```bash
-python backend/app.py
-```
-
----
-
-### 7️⃣ Executar frontend
-
-Dentro da pasta `frontend`:
-
-```bash
-python -m http.server 5500
-```
-
-Abrir no navegador:
-
-```
-http://127.0.0.1:5500
-```
-
----
-
-# 📌 Status do projeto
-
-Sprint 1 concluída ✔
-
-Funcionalidades implementadas:
-- Cadastro de movimentações
-- Listagem de movimentações
-- Cálculo de saldo
-- Interface web funcional
-
----
-
-# 👨‍💻 Autor
-
-Desenvolvido por **Marcello Iorio**
+Marcello Iorio
