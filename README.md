@@ -111,7 +111,7 @@ DB_NAME=controle_financeiro
 ## 📌 Status do projeto
 
 - Sprint 1 ✔ (movimentações e saldo)  
-- Sprint 2 ✔ (categorias, filtros e melhorias de UX)  
+- Sprint 2 ✔ (categorias e filtros)  
 
 ---
 
