@@ -28,6 +28,7 @@ Projeto desenvolvido por sprints utilizando Python (Flask), MySQL e uma interfac
 - HTML
 - CSS
 - JavaScript
+- Tailwind
 
 ---
 
@@ -41,6 +42,9 @@ Projeto desenvolvido por sprints utilizando Python (Flask), MySQL e uma interfac
 ✔ Edição de movimentações  
 ✔ Filtro por tipo (entrada/saída)  
 ✔ Feedback visual com notificações (toast)  
+✔ Filtro de data e categoria 
+✔ Relatórios em pdf e excel
+✔ Exclusão de movimentações
 
 ---
 
@@ -111,7 +115,8 @@ DB_NAME=controle_financeiro
 ## 📌 Status do projeto
 
 - Sprint 1 ✔ (movimentações e saldo)  
-- Sprint 2 ✔ (categorias e filtros)  
+- Sprint 2 ✔ (categorias e filtro de entrada e saída)  
+- Sprint 3 ✔ (relatório pdf/excel, filtros de data e categoria e exclusão de registros) 
 
 ---
 
