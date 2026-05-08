@@ -43,8 +43,8 @@ Projeto desenvolvido por sprints utilizando Python (Flask), MySQL e uma interfac
 ✔ Filtro por tipo (entrada/saída)  
 ✔ Feedback visual com notificações (toast)  
 ✔ Filtro de data e categoria  
-✔ Relatórios em pdf e excel 
-✔ Exclusão de movimentações 
+✔ Relatórios em pdf e excel  
+✔ Exclusão de movimentações  
 
 ---
 
