@@ -226,7 +226,7 @@
                     if (!response.ok) throw new Error();
                     mostrarToast("Movimentação excluída!");
                     carregarMovimentacoes();
-                    carregarSaldo();
+                    // carregarSaldo();
                 } catch {
                     mostrarToast("Erro ao excluir movimentação", "erro");
                 }
