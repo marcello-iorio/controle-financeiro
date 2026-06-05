@@ -116,7 +116,8 @@ DB_NAME=controle_financeiro
 
 - Sprint 1 ✔ (movimentações e saldo)  
 - Sprint 2 ✔ (categorias e filtro de entrada e saída)  
-- Sprint 3 ✔ (relatório pdf/excel, filtros de data e categoria e exclusão de movimentações ) 
+- Sprint 3 ✔ (relatório pdf/excel, filtros de data e categoria e exclusão de movimentações )
+- Sprint 4 ✔ (visualização de dashboard financeiro (saldos consolidados e despesas por categoria))
 
 ---
 
