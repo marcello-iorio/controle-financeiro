@@ -3,7 +3,7 @@
 ![Python](https://img.shields.io/badge/Python-3.x-blue)
 ![Flask](https://img.shields.io/badge/Flask-Backend-black)
 ![MySQL](https://img.shields.io/badge/MySQL-Database-orange)
-![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow)
+![Status](https://img.shields.io/badge/status-concluído-brightgreen)
 
 Sistema web para controle financeiro pessoal, permitindo registrar entradas e saídas, organizar movimentações por categorias e acompanhar o saldo em tempo real.
 
@@ -20,15 +20,18 @@ Projeto desenvolvido por sprints utilizando Python (Flask), MySQL e uma interfac
 ## 🚀 Tecnologias utilizadas
 
 **Backend**
-- Python
-- Flask
-- MySQL
+- Python 3
+- Flask & Flask-CORS (API REST)
+- MySQL (Banco de Dados)
+- OpenPyXL (Exportação Excel)
+- ReportLab (Geração de relatórios PDF)
 
 **Frontend**
-- HTML
-- CSS
-- JavaScript
-- Tailwind
+- HTML5, CSS3 e JavaScript
+- Tailwind CSS (Estilização)
+- Chart.js (Dashboard Analítico)
+- SheetJS (Manipulação de planilhas)
+- FontAwesome (Ícones)
 
 ---
 
