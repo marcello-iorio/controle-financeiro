@@ -48,6 +48,8 @@ Projeto desenvolvido por sprints utilizando Python (Flask), MySQL e uma interfac
 ✔ Filtro de data e categoria  
 ✔ Relatórios em pdf e excel  
 ✔ Exclusão de movimentações  
+✔ Dashboard de despesas
+
 
 ---
 
